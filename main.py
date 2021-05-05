@@ -18,7 +18,10 @@ class Timer(list):
             res = self.function(*args, **kwargs)
             end_time = datetime.datetime.utcnow()
         out = f.getvalue()
-        print(f"[{end_time - start_time}] {out}")
+        if len(out) != 0:
+            print(f"[{end_time - start_time}] {out}", end='')
+        else:
+            print(f"[{end_time - start_time}] {self.function}")
         return res
 
 
@@ -49,15 +52,20 @@ def create_pt(n: int, m: int) -> SortedPrefixTree:
     return pt
 
 
-n = 4  # Average length of the string
-m = 10000  # Total number of strings
-pt = create_pt(n, m)
-for i in range(0, 100):
-    find_word(pt, create_string(n))
+def main():
+    n = 4  # Average length of the string
+    m = 10000  # Total number of strings
+    pt = create_pt(n, m)
+    for i in range(0, 100):
+        find_word(pt, create_string(n))
 
-find_word(pt, "tac")
-find_word(pt, "tca")
-find_word(pt, "acn")
-find_word(pt, "tab")
-find_word(pt, "sah")
-find_word(pt, "shab")
+    find_word(pt, "tac")
+    find_word(pt, "tca")
+    find_word(pt, "acn")
+    find_word(pt, "tab")
+    find_word(pt, "sah")
+    find_word(pt, "shab")
+
+
+if __name__ == "__main__":
+    main()
