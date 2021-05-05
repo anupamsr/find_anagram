@@ -1,2 +1,1 @@
-from .PrefixTree import PrefixTree
-from .PrefixTree import SortedPrefixTree
+from .PrefixTree import PrefixTree, SortedPrefixTree

@@ -1,8 +1,9 @@
 import datetime
+import io
 import random
+from contextlib import redirect_stdout
+
 from prefix_tree import SortedPrefixTree
-from io import StringIO
-import sys
 
 
 class Timer(list):
@@ -11,21 +12,14 @@ class Timer(list):
         self.function = function
 
     def __call__(self, *args, **kwargs):
-        start_time = datetime.datetime.utcnow()
-        res = self.function(*args, **kwargs)
-        end_time = datetime.datetime.utcnow()
-        print(f"[{end_time - start_time}] ", end='')
+        f = io.StringIO()
+        with redirect_stdout(f):
+            start_time = datetime.datetime.utcnow()
+            res = self.function(*args, **kwargs)
+            end_time = datetime.datetime.utcnow()
+        out = f.getvalue()
+        print(f"[{end_time - start_time}] {out}")
         return res
-
-    def __enter__(self):
-        self._stdout = sys.stdout
-        sys.stdout = self._stringio = StringIO()
-        return self
-
-    def __exit__(self, *args):
-        self.extend(self._stringio.getvalue().splitlines())
-        del self._stringio  # free up some memory
-        sys.stdout = self._stdout
 
 
 @Timer
@@ -48,7 +42,8 @@ def create_string(n: int) -> str:
 
 @Timer
 def create_pt(n: int, m: int) -> SortedPrefixTree:
-    pt = SortedPrefixTree(["lowercase", "str", "object", "has", "no", "attribute", "found", "not", "python", "ahs"])
+    pt = SortedPrefixTree(["lowercase", "str", "object", "has", "no", "attribute", "found", "not",
+                           "python", "ahs"])
     for i in range(0, m):
         pt.add_word(create_string(n))
     return pt
